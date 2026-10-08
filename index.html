@@ -60,6 +60,106 @@
             color: #6b7280;
         }
     </style>
+
+    <style>
+        /* ===== Fast Track: Dropdown ใน Sidebar (เพิ่มใหม่ - ไม่แตะเนื้อหาเดิม) ===== */
+        @media (min-width: 1024px) {
+            aside.lg\:w-\[320px\] {
+                position: sticky; top: calc(var(--hdr-h, 74px) + 16px);
+                align-self: flex-start;
+                max-height: calc(100vh - var(--hdr-h, 74px) - 32px);
+                overflow-y: auto;
+            }
+        }
+        .menu-drop { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .3s ease; }
+        .menu-drop.is-open { grid-template-rows: 1fr; }
+        .menu-drop-inner { min-height: 0; overflow: hidden; }
+        .menu-drop:not(.is-open) .menu-drop-inner { visibility: hidden; }
+        .menu-drop-list {
+            display: flex; flex-direction: column; gap: 2px;
+            margin: 0.35rem 0 0.5rem 1.5rem; padding: 0.25rem 0 0.25rem 0.75rem;
+            border-left: 2px solid #FFEBEF;
+        }
+        .dark .menu-drop-list { border-left-color: #7f1d1d; }
+        .menu-sub {
+            display: flex; align-items: flex-start; gap: 0.6rem; width: 100%;
+            padding: 0.5rem 0.75rem; border-radius: 0.6rem; text-align: left;
+            font-size: 0.875rem; line-height: 1.35; color: #4b5563; cursor: pointer;
+            background: transparent; border: 0;
+            transition: background-color .2s, color .2s;
+        }
+        .menu-sub i { font-size: 1.05rem; margin-top: 0.1rem; flex-shrink: 0; color: #D31222; opacity: .75; }
+        .menu-sub:hover { background: #FFEBEF; color: #D31222; }
+        .menu-sub[aria-current="true"] { background: #FFEBEF; color: #D31222; font-weight: 600; }
+        .menu-sub[aria-current="true"] i { opacity: 1; }
+        .dark .menu-sub { color: #d1d5db; }
+        .dark .menu-sub:hover, .dark .menu-sub[aria-current="true"] { background: rgba(127,29,29,.35); color: #fca5a5; }
+        .menu-sub:focus-visible { outline: 2px solid #D31222; outline-offset: 2px; }
+        /* ซ่อนเมนูย่อยแบบเดิมใน Sidebar (ถูกแทนที่ด้วย Dropdown ใหม่) */
+        #submenu-personality, #submenu-stock { display: none !important; }
+        @media (prefers-reduced-motion: reduce) { .menu-drop { transition: none !important; } }
+    </style>
+
+    <style>
+        /* ===== Image Lightbox (เพิ่มใหม่ - ไม่แตะเนื้อหาเดิม) ===== */
+        .tab-content img { cursor: zoom-in; }
+        .lb-overlay {
+            position: fixed; inset: 0; z-index: 1000;
+            display: none; flex-direction: column;
+            background: rgba(10,10,12,.92);
+            opacity: 0; transition: opacity .2s ease;
+            touch-action: pan-y;
+        }
+        .lb-overlay.is-open { display: flex; }
+        .lb-overlay.is-visible { opacity: 1; }
+        .lb-top {
+            display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+            padding: 0.75rem 1rem; color: #e5e7eb; font-size: 0.875rem; flex-shrink: 0;
+        }
+        .lb-caption { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .lb-count { color: #9ca3af; flex-shrink: 0; }
+        .lb-btn {
+            width: 2.75rem; height: 2.75rem; border-radius: 9999px; border: 1px solid rgba(255,255,255,.2);
+            background: rgba(255,255,255,.1); color: #fff; font-size: 1.4rem; cursor: pointer;
+            display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+            transition: background-color .2s;
+        }
+        .lb-btn:hover { background: #D31222; border-color: #D31222; }
+        .lb-btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+        .lb-stage {
+            position: relative; flex: 1; min-height: 0; overflow: auto;
+            display: flex; padding: 0 3.5rem 1rem;
+        }
+        .lb-stage img {
+            margin: auto; flex-shrink: 0; max-width: none; border-radius: 0.5rem;
+            background: #fff; cursor: zoom-in; user-select: none; -webkit-user-drag: none;
+        }
+        .lb-stage.is-zoomed img { cursor: zoom-out; }
+        .lb-nav { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; }
+        .lb-prev { left: 0.5rem; } .lb-next { right: 0.5rem; }
+        .lb-nav[hidden] { display: none; }
+        @media (max-width: 640px) { .lb-stage { padding: 0 0.5rem 1rem; } .lb-nav { top: auto; bottom: 1rem; transform: none; } }
+        @media (prefers-reduced-motion: reduce) { .lb-overlay { transition: none; } }
+    </style>
+
+    <style>
+        /* ===== YouTube Video Slot (เพิ่มใหม่) ===== */
+        .video-slot { width: 100%; max-width: 56rem; margin-left: auto; margin-right: auto; }
+        .video-frame {
+            position: relative; width: 100%; aspect-ratio: 16 / 9;
+            border-radius: 0.75rem; overflow: hidden; background: #000;
+            border: 1px solid #e5e7eb; box-shadow: 0 1px 2px rgba(0,0,0,.05);
+        }
+        .dark .video-frame { border-color: #374151; }
+        .video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+        .video-empty {
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem;
+            width: 100%; aspect-ratio: 16 / 9; padding: 1rem; text-align: center;
+            border: 2px dashed #d1d5db; border-radius: 0.75rem; background: #f9fafb; color: #6b7280;
+        }
+        .dark .video-empty { border-color: #4b5563; background: rgba(31,41,55,.5); color: #9ca3af; }
+        .video-empty i { font-size: 2.5rem; color: #D31222; opacity: .7; }
+    </style>
 </head>
 
 <body class="bg-bg-gray dark:bg-gray-950 text-central-dark dark:text-gray-100 font-sans antialiased min-h-screen flex flex-col">
@@ -106,20 +206,20 @@
                     <div class="w-full text-center mb-4 flex justify-center">
                         <div class="flex items-center justify-center gap-4">
                             <div class="h-px w-12 bg-central-red"></div>
-                            <span class="text-xl md:text-2xl font-medium text-gray-100 drop-shadow-md">ยินดีต้อนรับสู่</span>
+                            <span class="text-xl md:text-2xl font-medium text-gray-100 drop-shadow-md">ยินดีต้อนรับสู่ </span>
                             <div class="h-px w-12 bg-central-red"></div>
                         </div>
                     </div>
                     
                     <div class="w-full text-center mb-6">
                         <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-white drop-shadow-lg leading-tight">
-                            Central เป็นงานพนักงาน
+                            Central เป็นงาน
                         </h1>
                     </div>
 
                     <div class="w-full text-center flex flex-col items-center">
                         <p class="text-xl md:text-2xl font-medium text-white mb-6 drop-shadow-md">
-                            เว็บไซต์เพื่อการเรียนรู้เซ็นทรัล นครปฐม
+                            เซ็นทรัล นครปฐม
                         </p>
                         <p class="text-gray-200 md:text-lg mb-10 max-w-lg mx-auto drop-shadow-md leading-relaxed">
                             เรียนรู้กฎระเบียบ และพัฒนาทักษะ เพื่อเป็นพนักงานขายมืออาชีพ<br class="hidden md:block">
@@ -161,12 +261,7 @@
                 
                 <div class="relative z-10 max-w-[1440px] w-full mx-auto px-4 md:px-8 flex justify-between items-center">
                     
-                    <button onclick="showView('home-view')" class="flex items-center gap-2 px-4 py-2.5 bg-black/20 hover:bg-black/40 backdrop-blur-md rounded-xl text-white transition-all duration-300 group border border-white/20 shadow-sm cursor-pointer">
-                        <i class="ph ph-arrow-left text-xl group-hover:-translate-x-1 transition-transform"></i>
-                        <span class="font-medium hidden sm:block">กลับหน้าหลัก</span>
-                    </button>
-
-                    <div class="text-right">
+                    <div class="text-right ml-auto">
                         <div class="inline-flex items-center gap-3 text-sm font-medium text-gray-300 dark:text-gray-400 mb-2">
                             <div class="h-px w-8 bg-central-red"></div>
                             <span id="banner-category">หมวดหมู่</span>
@@ -182,6 +277,12 @@
                 
                 <aside class="w-full lg:w-[320px] flex-shrink-0">
                     <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm overflow-hidden flex flex-col h-full border border-gray-100 dark:border-gray-800">
+                        <div class="px-4 pt-4 flex justify-start bg-gray-50/50 dark:bg-gray-800/50">
+                            <button onclick="showView('home-view')" class="flex items-center gap-2 px-3 py-2 bg-white dark:bg-gray-800 hover:bg-central-red-light dark:hover:bg-red-900/30 rounded-xl text-sm text-gray-700 dark:text-gray-200 hover:text-central-red dark:hover:text-red-300 transition-all duration-300 group border border-gray-200 dark:border-gray-700 shadow-sm cursor-pointer">
+                                <i class="ph ph-arrow-left text-lg group-hover:-translate-x-1 transition-transform"></i>
+                                <span class="font-medium">กลับหน้าหลัก</span>
+                            </button>
+                        </div>
                         <div class="bg-gray-50/50 dark:bg-gray-800/50 p-6 flex flex-col items-center text-center border-b border-gray-100 dark:border-gray-800">
                             <div class="w-14 h-14 rounded-full bg-central-red-light dark:bg-red-900/30 text-central-red flex items-center justify-center mb-3">
                                 <i class="ph ph-books text-3xl"></i>
@@ -589,7 +690,7 @@
                                     <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-300">
                                         <li>ต้องแต่งหน้าให้สวยงามเหมาะสม ให้เข้ากับบุคลิก และแบรนด์คอนเซปท์</li>
                                         <li>ห้ามแต่งหน้าสีฉูดฉาด, แนวพังค์ หรือไม่แต่งหน้าเลย</li>
-                                        <li>ควรใช้สีลิปสติก ตามรูปแบบที่เหมาะสมที่พนักงานสามารถทาได้</li>
+                                        <li>ควรใช้สีลิปสติก ตามรูปแบบที่เหมาะสมที่พนักงานสามารถทำได้</li>
                                     </ul>
                                     <div class="mt-6 grid grid-cols-2 gap-4">
                                         <div>
@@ -792,10 +893,10 @@
                                 <table class="w-full text-sm text-left text-gray-600 dark:text-gray-300 min-w-[600px]">
                                     <thead class="text-xs text-white uppercase bg-central-red sticky top-0 z-10 shadow-sm">
                                         <tr>
-                                            <th scope="col" class="px-6 py-4 text-center w-24">รหัสกะ</th>
+                                            <th scope="col" class="px-6 py-4 text-center w--ุ">รหัสกะ</th>
                                             <th scope="col" class="px-6 py-4 text-center w-32">เวลาเข้า</th>
                                             <th scope="col" class="px-6 py-4 text-center w-32">เวลาออก</th>
-                                            <th scope="col" class="px-6 py-4 text-center w-32">DWS</th>
+                                            <th scope="col" class="px-6 py-4 text-center w-27">DWS</th>
                                             <th scope="col" class="px-6 py-4 text-center">เวลาพัก</th>
                                         </tr>
                                     </thead>
@@ -935,22 +1036,22 @@
                                         </tr>
                                         <!-- Special Codes -->
                                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors bg-red-50/50 dark:bg-red-900/10">
-                                            <td class="px-6 py-3 text-center font-bold text-central-red">W</td><td class="px-6 py-3 text-center">11.00</td><td class="px-6 py-3 text-center">20.30</td><td class="px-6 py-3 text-center"><span class="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-800/50 px-2 py-1 rounded text-xs font-mono">1100F</span></td><td class="px-6 py-3 text-center">15:00-16:30</td>
+                                            <td class="px-6 py-3 text-center font-bold text-central-red">W<br>(วันหยุดประจำปี)</td><td class="px-6 py-3 text-center">11.00</td><td class="px-6 py-3 text-center">20.30</td><td class="px-6 py-3 text-center"><span class="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-800/50 px-2 py-1 rounded text-xs font-mono">1100F</span></td><td class="px-6 py-3 text-center">15:00-16:30</td>
                                         </tr>
                                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors bg-red-50/50 dark:bg-red-900/10">
-                                            <td class="px-6 py-3 text-center font-bold text-central-red">S</td><td class="px-6 py-3 text-center">11.00</td><td class="px-6 py-3 text-center">20.30</td><td class="px-6 py-3 text-center"><span class="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-800/50 px-2 py-1 rounded text-xs font-mono">1100F</span></td><td class="px-6 py-3 text-center">15:00-16:30</td>
+                                            <td class="px-6 py-3 text-center font-bold text-central-red">S<br>(วันหยุดเพิ่ม)</td><td class="px-6 py-3 text-center">11.00</td><td class="px-6 py-3 text-center">20.30</td><td class="px-6 py-3 text-center"><span class="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-800/50 px-2 py-1 rounded text-xs font-mono">1100F</span></td><td class="px-6 py-3 text-center">15:00-16:30</td>
                                         </tr>
                                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors bg-red-50/50 dark:bg-red-900/10">
-                                            <td class="px-6 py-3 text-center font-bold text-central-red">D</td><td class="px-6 py-3 text-center">08.30</td><td class="px-6 py-3 text-center">18.00</td><td class="px-6 py-3 text-center"><span class="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-800/50 px-2 py-1 rounded text-xs font-mono">0830W</span></td><td class="px-6 py-3 text-center">12:30-14:00</td>
+                                            <td class="px-6 py-3 text-center font-bold text-central-red">D<br>(ไปอบรมภายนอก/ภายในบริษัท)</td><td class="px-6 py-3 text-center">08.30</td><td class="px-6 py-3 text-center">18.00</td><td class="px-6 py-3 text-center"><span class="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-800/50 px-2 py-1 rounded text-xs font-mono">0830W</span></td><td class="px-6 py-3 text-center">12:30-14:00</td>
                                         </tr>
                                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors bg-red-50/50 dark:bg-red-900/10">
-                                            <td class="px-6 py-3 text-center font-bold text-central-red">V</td><td class="px-6 py-3 text-center">10.00</td><td class="px-6 py-3 text-center">19.30</td><td class="px-6 py-3 text-center"><span class="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-800/50 px-2 py-1 rounded text-xs font-mono">1000W</span></td><td class="px-6 py-3 text-center">14:00-15:30</td>
+                                            <td class="px-6 py-3 text-center font-bold text-central-red">V<br>(พักร้อน)</td><td class="px-6 py-3 text-center">10.00</td><td class="px-6 py-3 text-center">19.30</td><td class="px-6 py-3 text-center"><span class="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-800/50 px-2 py-1 rounded text-xs font-mono">1000W</span></td><td class="px-6 py-3 text-center">14:00-15:30</td>
                                         </tr>
                                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors bg-red-50/50 dark:bg-red-900/10">
-                                            <td class="px-6 py-3 text-center font-bold text-central-red">C</td><td class="px-6 py-3 text-center">11.00</td><td class="px-6 py-3 text-center">20.30</td><td class="px-6 py-3 text-center"><span class="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-800/50 px-2 py-1 rounded text-xs font-mono">1100F</span></td><td class="px-6 py-3 text-center">15:00-16:30</td>
+                                            <td class="px-6 py-3 text-center font-bold text-central-red">C<br>(ขอเปลี่ยนเวรวันหยุด)</td><td class="px-6 py-3 text-center">11.00</td><td class="px-6 py-3 text-center">20.30</td><td class="px-6 py-3 text-center"><span class="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-800/50 px-2 py-1 rounded text-xs font-mono">1100F</span></td><td class="px-6 py-3 text-center">15:00-16:30</td>
                                         </tr>
                                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors bg-red-50/50 dark:bg-red-900/10">
-                                            <td class="px-6 py-3 text-center font-bold text-central-red">B</td><td class="px-6 py-3 text-center">10.00</td><td class="px-6 py-3 text-center">19.30</td><td class="px-6 py-3 text-center"><span class="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-800/50 px-2 py-1 rounded text-xs font-mono">1000W</span></td><td class="px-6 py-3 text-center">14:00-15:30</td>
+                                            <td class="px-6 py-3 text-center font-bold text-central-red">B<br>(ลาสวัสดิการทุกประเภท)</td><td class="px-6 py-3 text-center">10.00</td><td class="px-6 py-3 text-center">19.30</td><td class="px-6 py-3 text-center"><span class="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-800/50 px-2 py-1 rounded text-xs font-mono">1000W</span></td><td class="px-6 py-3 text-center">14:00-15:30</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -1489,7 +1590,7 @@
                                     <strong class="text-gray-800 dark:text-gray-100">Chat&Shop</strong> คือ การซื้อของออนไลน์ ที่อำนวยความสะดวกให้กับกลุ่มลูกค้าในการเลือกซื้อสินค้า สอบถามข้อมูล รวมถึงการขอคำแนะนำเกี่ยวกับสินค้าและบริการเพิ่มเติม
                                 </p>
                                 <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-6">
-                                    <strong class="text-gray-800 dark:text-gray-100">รูปแบบการทำงานของ Chat & Shop</strong> ซื้อสินค้าด้วยการพูดคุย (แชท) กับพนักงานขายที่มีความเชี่ยวชาญ ผ่านช่องทาง Line หรือ Facebook inbox โดยที่เราแจ้งสินค้าที่ต้องการ สี ไซส์ และจำนวนที่ต้องการ พนักงานขายเป็นคนดำเนินการค้นหาสินค้า แจ้งโปรโมชั่น เก็บเงินไป และส่งสินค้าไปจนถึงการบริการหลังการขาย ทั้งนี้มีการบันทึกข้อมูลการสนทนาและประวัติของลูกค้า ในการแชทกับพนักงานทุกครั้ง
+                                    <strong class="text-gray-800 dark:text-gray-100">รูปแบบการทำงานของ Chat&Shop</strong> ซื้อสินค้าด้วยการพูดคุย (แชท) กับพนักงานขายที่มีความเชี่ยวชาญ ผ่านช่องทาง Line หรือ Facebook inbox โดยที่เราแจ้งสินค้าที่ต้องการ สี ไซส์ และจำนวนที่ต้องการ พนักงานขายเป็นคนดำเนินการค้นหาสินค้า แจ้งโปรโมชั่น เก็บเงินไป และส่งสินค้าไปจนถึงการบริการหลังการขาย ทั้งนี้มีการบันทึกข้อมูลการสนทนาและประวัติของลูกค้า ในการแชทกับพนักงานทุกครั้ง
                                 </p>
 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -1627,7 +1728,7 @@
 
                             <div class="bg-gray-50 dark:bg-gray-800/50 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-sm">
                                 <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
-                                    <strong class="text-central-red">คือ</strong> โครงการสำหรับช่วยเหลือลูกค้าในนการหาสินค้าที่หมดหรือไม่มีในสาขา โดยสามารถหาสินค้าจากเครื่องมือต่าง ๆ ที่บริษัทมีให้ ซึ่งจะช่วยให้บริการลูกค้าให้สามารถได้สินค้าที่ต้องการได้ แม้จะไม่มีสินค้าในสาขาที่เดินทางไปก็ตาม ประกอบด้วย 2 วิธี คือ <span class="font-bold">CENTRAL APP</span> และ <span class="font-bold">E-ORDERING</span>
+                                    <strong class="text-central-red">คือ</strong> โครงการสำหรับช่วยเหลือลูกค้าในการหาสินค้าที่หมดหรือไม่มีในสาขา โดยสามารถหาสินค้าจากเครื่องมือต่าง ๆ ที่บริษัทมีให้ ซึ่งจะช่วยให้บริการลูกค้าให้สามารถได้สินค้าที่ต้องการได้ แม้จะไม่มีสินค้าในสาขาที่เดินทางไปก็ตาม ประกอบด้วย 2 วิธี คือ <span class="font-bold">CENTRAL APP</span> และ <br><span class="font-bold">E-ORDERING</span>
                                 </p>
 
                                 <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-xl p-4 shadow-md text-white flex items-center gap-4 mb-6">
@@ -1927,7 +2028,7 @@
 
                                 <!-- การจัดเตรียมกล่องและการจัดเรียง -->
                                 <div class="bg-gray-50 dark:bg-gray-800/50 rounded-2xl p-6 border border-gray-100 dark:border-gray-700">
-                                    <h4 class="text-lg font-bold text-gray-800 dark:text-gray-100 mb-3 flex items-center gap-2"><i class="ph ph-stack text-central-red"></i> การเตรียมการจัดเรียงสินค้า</h4>
+                                    <h4 class="text-lg font-bold text-gray-800 dark:text-gray-100 mb-3 flex items-center gap-2"><i class="ph ph-stack text-central-red"></i> การเตรียมการจัดเรียงสินค้าสำหรับการนับสต็อก</h4>
                                     <ul class="list-disc pl-5 space-y-2 text-sm text-gray-600 dark:text-gray-400">
                                         <li><span class="font-medium text-gray-800 dark:text-gray-200">กรณีไม่ต้องตรวจนับล่วงหน้า (นับเฉพาะกลางคืน):</span> ให้จัดเรียงสินค้าเป็นหมวดหมู่ตามหลัก “การจัดสต็อกพื้นฐาน”</li>
                                         <li><span class="font-medium text-gray-800 dark:text-gray-200">กรณีเตรียมตรวจนับล่วงหน้า (สินค้าปกติ):</span> นำ Barcode ติดใบแนบสินค้าตามลำดับที่เรียงลงกล่อง และใส่จำนวนตามที่นับได้จริง</li>
@@ -2066,14 +2167,14 @@
                             </div>
                         </section>
 
-                        <!-- 6. ปัญหาและการแก้ไข -->
+                          <!-- 6. ปัญหาและการแก้ไข -->
                         <section id="sec-stock-problems" class="space-y-6 pt-6 border-t border-gray-200 dark:border-gray-800">
                             <div class="flex items-center gap-2 mb-6">
                                 <i class="ph-fill ph-warning-circle text-orange-500 text-2xl"></i>
                                 <h3 class="text-xl font-bold text-gray-800 dark:text-gray-100">ปัญหา สาเหตุ และวิธีป้องกัน (Variance)</h3>
                             </div>
 
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 <!-- Problem 1 -->
                                 <div class="bg-orange-50/50 dark:bg-orange-900/10 p-6 rounded-xl border border-orange-200 dark:border-orange-800/30">
                                     <h4 class="font-bold text-orange-800 dark:text-orange-400 mb-3 text-lg">1. เกิดจาก Group สินค้ารวมกันหลาย SKU</h4>
@@ -2088,7 +2189,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <!-- Problem 2 -->
                                 <div class="bg-orange-50/50 dark:bg-orange-900/10 p-6 rounded-xl border border-orange-200 dark:border-orange-800/30">
                                     <h4 class="font-bold text-orange-800 dark:text-orange-400 mb-3 text-lg">2. Scanner สแกนสินค้าผิด Batch NO.</h4>
@@ -2100,6 +2200,20 @@
                                         <div>
                                             <span class="font-semibold text-gray-800 dark:text-gray-200 block"><i class="ph ph-shield-check text-green-500"></i> วิธีป้องกัน:</span>
                                             <p class="text-gray-600 dark:text-gray-400 mt-1">ตรวจสอบและทำความเข้าใจ Control Shelf Form ก่อนทำการตรวจนับจริง</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Problem 3 -->
+                                <div class="bg-orange-50/50 dark:bg-orange-900/10 p-6 rounded-xl border border-orange-200 dark:border-orange-800/30">
+                                    <h4 class="font-bold text-orange-800 dark:text-orange-400 mb-3 text-lg">3. จำนวนสินค้าระหว่าง Scanner และจำนวนสินค้าจริงไม่ตรงกัน</h4>
+                                    <div class="space-y-3 text-sm">
+                                        <div>
+                                            <span class="font-semibold text-gray-800 dark:text-gray-200 block"><i class="ph ph-magnifying-glass text-orange-500"></i> สาเหตุ:</span>
+                                            <p class="text-gray-600 dark:text-gray-400 mt-1">พนักงานขายไม่จัดสินค้าให้มีจำนวนเหมาะสมกับแต่ละ Batch</p>
+                                        </div>
+                                        <div>
+                                            <span class="font-semibold text-gray-800 dark:text-gray-200 block"><i class="ph ph-shield-check text-green-500"></i> วิธีป้องกัน:</span>
+                                            <p class="text-gray-600 dark:text-gray-400 mt-1">ให้พนักงานทำการจัดเรียงสินค้าให้ไม่เกิน 30 - 50 ชิ้นต่อ Batch</p>
                                         </div>
                                     </div>
                                 </div>
@@ -2143,7 +2257,7 @@
                                     <!-- Type 3 -->
                                     <div class="bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm flex items-start gap-3 w-full">
                                         <div class="w-8 h-8 rounded-full bg-red-50 dark:bg-red-900/20 text-central-red flex items-center justify-center font-bold flex-shrink-0 mt-0.5">3</div>
-                                        <p class="text-sm text-gray-700 dark:text-gray-300">นำสินค้าราคาปกติมาจัดรายการลดเฉพาะรุ่น กรณีทำคืนเข้าใหม่ด้วยราคา Net แจ้ง Barcode ที่ทาส่งคืนที่ช่อง RTV Barcode เช่น ต้องทำคืนเข้าใหม่ เพราะเป็นการนำเอาสินค้าในเคาร์เตอร์ มาจัดรายการขายสินค้า(ขายสินค้าด้วยบาร์โปร) เมื่อจบรายการต้องคืนสินค้าบาร์ปกติตามจานวนชิ้นขายได้ และ Invบาร์โปร <span class="font-medium text-central-red">ใช้กับสินค้า Consignment (บาร์กลุ่ม เท่านั้น)</span></p>
+                                        <p class="text-sm text-gray-700 dark:text-gray-300">นำสินค้าราคาปกติมาจัดรายการลดเฉพาะรุ่น กรณีทำคืนเข้าใหม่ด้วยราคา Net แจ้ง Barcode ที่ทำส่งคืนที่ช่อง RTV Barcode เช่น ต้องทำคืนเข้าใหม่ เพราะเป็นการนำเอาสินค้าในเคาร์เตอร์ มาจัดรายการขายสินค้า(ขายสินค้าด้วยบาร์โปร) เมื่อจบรายการต้องคืนสินค้าบาร์ปกติตามจานวนชิ้นขายได้ และ Inv บาร์โปร <span class="font-medium text-central-red">ใช้กับสินค้า Consignment (บาร์กลุ่ม เท่านั้น)</span></p>
                                     </div>
                                     <!-- Type 4 -->
                                     <div class="bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm flex items-start gap-3 w-full">
@@ -2153,7 +2267,7 @@
                                     <!-- Type 5 -->
                                     <div class="bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm flex items-start gap-3 w-full">
                                         <div class="w-8 h-8 rounded-full bg-red-50 dark:bg-red-900/20 text-central-red flex items-center justify-center font-bold flex-shrink-0 mt-0.5">5</div>
-                                        <p class="text-sm text-gray-700 dark:text-gray-300">สินค้าเครดิตปรับราคาในระบบ JDA เช่น สินค้าที่ให้ส่วนลดในเคาร์เตอร์ที่ต้องการให้ Scan แล้วได้รับส่วนลดทันที(AdEvent) <span class="font-medium text-central-red">ใช้กับ Credit</span></p>
+                                        <p class="text-sm text-gray-700 dark:text-gray-300">สินค้าเครดิตปรับราคาในระบบ JDA เช่น สินค้าที่ให้ส่วนลดในเคาร์เตอร์ที่ต้องการให้ Scan แล้วได้รับส่วนลดทันที (AdEvent) <span class="font-medium text-central-red">ใช้กับ Credit</span></p>
                                     </div>
                                     <!-- Type 6 -->
                                     <div class="bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm flex items-start gap-3 w-full">
@@ -2163,7 +2277,7 @@
                                     <!-- Type 7 -->
                                     <div class="bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm flex items-start gap-3 w-full">
                                         <div class="w-8 h-8 rounded-full bg-red-50 dark:bg-red-900/20 text-central-red flex items-center justify-center font-bold flex-shrink-0 mt-0.5">7</div>
-                                        <p class="text-sm text-gray-700 dark:text-gray-300">ของแถมไม่ต้องนำเข้าเครื่อง POS (กรณีที่มีสต๊อคในระบบให้สาขาทำ RTV เมื่อจบรายการ) กรณีร้านค้าจัดทุกของแถมเพื่อให้ลูกค้าแบบไม่นำเข้าเครื่อง เช่น ซื้อเสื้อ 3 ตัวแถม กระติกน้า 1 ใบ โดยสินค้านั้นต้องไม่มีขายในห้าง <span class="font-medium text-central-red">ใช้กับสินค้า Credit และ Consignment</span></p>
+                                        <p class="text-sm text-gray-700 dark:text-gray-300">ของแถมไม่ต้องนำเข้าเครื่อง POS (กรณีที่มีสต็อกในระบบให้สาขาทำ RTV เมื่อจบรายการ) กรณีร้านค้าจัดทุกของแถมเพื่อให้ลูกค้าแบบไม่นำเข้าเครื่อง เช่น ซื้อเสื้อ 3 ตัวแถม กระติกน้า 1 ใบ โดยสินค้านั้นต้องไม่มีขายในห้าง <span class="font-medium text-central-red">ใช้กับสินค้า Credit และ Consignment</span></p>
                                     </div>
                                     <!-- Type 8 -->
                                     <div class="bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm flex items-start gap-3 w-full">
@@ -2184,9 +2298,7 @@
                             <h3 class="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4 text-center">ตัวอย่างใบแจ้งงาน</h3>
                             <div class="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm text-center w-full">
                                 <img src="701 ใบแจ้งงาน.jpg" class="w-full h-auto rounded-lg object-cover shadow-sm border border-gray-200 dark:border-gray-700 mx-auto max-w-5xl" alt="ตัวอย่างใบแจ้งงานและส่วนประกอบต่างๆ">
-                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-4 max-w-2xl mx-auto">
-                                    <i class="ph-fill ph-info text-central-red inline-block mr-1"></i> ภาพแสดงส่วนประกอบของใบแจ้งงาน เช่น เลขที่ใบแจ้งงานและชื่องาน, ระยะเวลาการจัดรายการ, Comment จาก POS Admin, รายละเอียดสินค้าที่ร่วมรายการ, บาร์สำหรับจัดทำ Barcode sheet/บาร์ Vario และส่วนที่จัดซื้อแจ้ง POP ทำป้ายราคา
-                                </p>
+                                
                             </div>
                         </section>
 
@@ -2240,13 +2352,13 @@
                                 <!-- Point 1 -->
                                 <div class="bg-white dark:bg-gray-800 p-5 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm w-full">
                                     <h4 class="font-bold text-gray-800 dark:text-gray-100 mb-3 flex items-start gap-2">
-                                        <span class="text-central-red mt-0.5 flex-shrink-0">1.</span> กรณีที่มีการปรับราคาซ้อนงาน มีทั้งใบแจ้งงานและใบปรับราคาไม่สามารถทา Price Override ได้
+                                        <span class="text-central-red mt-0.5 flex-shrink-0">1.</span> กรณีที่มีการปรับราคาซ้อนงาน มีทั้งใบแจ้งงานและใบปรับราคาไม่สามารถทำ Price Override ได้
                                     </h4>
                                     <div class="pl-6 md:pl-8">
-                                        <p class="text-sm text-gray-700 dark:text-gray-300 mb-2 font-medium">พบปัญหาดาเนินการดังนี้</p>
+                                        <p class="text-sm text-gray-700 dark:text-gray-300 mb-2 font-medium">พบปัญหาดำเนินการดังนี้</p>
                                         <ul class="list-disc pl-5 space-y-1 text-sm text-gray-600 dark:text-gray-400">
                                             <li>แจ้งจัดซื้อ</li>
-                                            <li>จัดทำใบเสร็จแบบ Manual ให้ลูกค้าจนกว่า จัดซื้อได้ดาเนินการแจ้งกลับมาที่สาขา</li>
+                                            <li>จัดทำใบเสร็จแบบ Manual ให้ลูกค้าจนกว่า จัดซื้อได้ดำเนินการแจ้งกลับมาที่สาขา</li>
                                             <li>กรณีเร่งด่วน ให้โทรศัพท์ไปที่ฝ่ายจัดซื้อ เพื่อตรวจสอบและแก้ไขปัญหา</li>
                                         </ul>
                                     </div>
@@ -2255,14 +2367,14 @@
                                 <!-- Point 2 -->
                                 <div class="bg-white dark:bg-gray-800 p-5 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm w-full">
                                     <h4 class="font-bold text-gray-800 dark:text-gray-100 mb-3 flex items-start gap-2">
-                                        <span class="text-central-red mt-0.5 flex-shrink-0">2.</span> กรณีสินค้าจัดรายการเฉพาะรุ่น กดส่วนลดหน้าเครื่อง และต้องจัดทำBarcode Sheet
+                                        <span class="text-central-red mt-0.5 flex-shrink-0">2.</span> กรณีสินค้าจัดรายการเฉพาะรุ่น กดส่วนลดหน้าเครื่อง และต้องจัดทำ Barcode Sheet
                                     </h4>
                                     <div class="pl-6 md:pl-8">
                                         <ul class="list-disc pl-5 space-y-1 text-sm text-gray-600 dark:text-gray-400 mb-3">
                                             <li>DSM จะต้องสอบถามธุรการ SMM ติดตามการจัดทำ Barcode Sheet ให้ถูกต้องครบถ้วน จัดเก็บBarcode Sheet เดิม</li>
                                         </ul>
                                         <div class="bg-yellow-50 dark:bg-yellow-900/20 p-3 rounded-lg border border-yellow-200 dark:border-yellow-800/30 text-sm text-gray-700 dark:text-gray-300">
-                                            กรณีไม่มีบาร์โค้ดVario (บาร์โค้ดส่วนลด) หรือ Scan Barcode แล้วลูกค้าไม่ได้รับส่วนลด <span class="font-semibold">DSM สามารถพิจารณาอนุมัติ ให้แคชเชียร์กดManual ตามประเภทในใบแจ้งงานได้ ไม่ต้องทำ Price Override</span>
+                                            กรณีไม่มีบาร์โค้ด Vario (บาร์โค้ดส่วนลด) หรือ Scan Barcode แล้วลูกค้าไม่ได้รับส่วนลด <span class="font-semibold">DSM สามารถพิจารณาอนุมัติ ให้แคชเชียร์กด Manual ตามประเภทในใบแจ้งงานได้ ไม่ต้องทำ Price Override</span>
                                         </div>
                                     </div>
                                 </div>
@@ -2275,7 +2387,7 @@
                                     <div class="pl-6 md:pl-8">
                                         <p class="text-sm text-gray-700 dark:text-gray-300 mb-2 font-medium">ดำเนินการดังต่อไปนี้</p>
                                         <ul class="list-disc pl-5 space-y-1 text-sm text-gray-600 dark:text-gray-400 mb-4">
-                                            <li>ตรวจสอบดูเงื่อนไขในใบแจ้งงาน ว่าทาตามเงื่อนไขถูกต้องหรือไม่</li>
+                                            <li>ตรวจสอบดูเงื่อนไขในใบแจ้งงาน ว่าทำตามเงื่อนไขถูกต้องหรือไม่</li>
                                             <li>พบว่าถูกต้องให้DSM พิจารณาอนุมัติ กดส่วนลดหน้าเครื่อง</li>
                                         </ul>
                                         
@@ -2514,11 +2626,27 @@
                             </div>
                         </section>
 
+                        <!-- คลิปวิดีโอ (YouTube): ระหว่างเอกสารที่เกี่ยวข้องกรณีโอนคืน กับ การขอเลื่อน shipped Transfer -->
+                        <section id="sec-transfer-video" class="space-y-6 pt-6 border-t border-gray-200 dark:border-gray-800">
+                            <div class="flex items-center gap-2 mb-4">
+                                <i class="ph-fill ph-youtube-logo text-central-red text-2xl"></i>
+                                <h3 class="text-xl font-bold text-gray-800 dark:text-gray-100">คลิปวิดีโอแนะนำ</h3>
+                            </div>
+                            <!-- ▶ วิธีใส่คลิป: วางลิงก์ YouTube ระหว่างเครื่องหมายคำพูดของ data-youtube-url (ตัวอย่าง https://www.youtube.com/watch?v=XXXXXXXXXXX หรือ https://youtu.be/XXXXXXXXXXX) -->
+                            <div class="video-slot" data-youtube-url="https://youtu.be/tzBWIeWzMEk?si=asqYIzhd550PmOJC" data-youtube-title="คลิปวิดีโอแนะนำ การโอนสินค้า">
+                                <div class="video-empty">
+                                    <i class="ph-fill ph-youtube-logo"></i>
+                                    <span class="font-medium">พื้นที่สำหรับคลิปวิดีโอ</span>
+                                    <span class="text-sm">ยังไม่มีคลิปวิดีโอในหัวข้อนี้</span>
+                                </div>
+                            </div>
+                        </section>
+
                         <!-- 5. การขอเลื่อน shipped Transfer -->
                         <section id="sec-transfer-postpone" class="space-y-6 pt-6 border-t border-gray-200 dark:border-gray-800">
                             <div class="flex items-center gap-2 mb-4">
                                 <i class="ph-fill ph-calendar-x text-central-red text-2xl"></i>
-                                <h3 class="text-xl font-bold text-gray-800 dark:text-gray-100">การขอเลื่อน shipped Transfer</h3>
+                                <h3 class="text-xl font-bold text-gray-800 dark:text-gray-100">การขอเลื่อน Shipped Transfer</h3>
                             </div>
                             
                             <div class="overflow-x-auto bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
@@ -2641,7 +2769,7 @@
                             <!-- SKU Info -->
                             <div class="bg-gray-50 dark:bg-gray-800/50 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 mb-6">
                                 <h4 class="font-bold text-lg text-gray-800 dark:text-gray-100 mb-2">SKU (Stock Keeping Unit)</h4>
-                                <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">คือ รหัสประจำสินค้าเป็นตัวเลข 7-8 หลัก สามารถค้นหาในระบบ JDA สินค้าแต่ละรายการจะมี SKU ไม่ซ้ำกัน การกำหนดรหัสประจำตัวสินค้าเพื่อใช้อ้างอิงข้อมูลต่าง ๆ เกี่ยวกับสินค้า จัดทำโดยจัดซื้อที่รับผิดชอบสินค้านั้น ๆ โดยแบ่งเป็น</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">คือ รหัสประจำสินค้าเป็นตัวเลข 7 - 8 หลัก สามารถค้นหาในระบบ JDA สินค้าแต่ละรายการจะมี SKU ไม่ซ้ำกัน การกำหนดรหัสประจำตัวสินค้าเพื่อใช้อ้างอิงข้อมูลต่าง ๆ เกี่ยวกับสินค้า จัดทำโดยจัดซื้อที่รับผิดชอบสินค้านั้น ๆ โดยแบ่งเป็น</p>
                                 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                                     <div class="bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
@@ -2655,9 +2783,9 @@
                                     <div class="bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
                                         <h5 class="font-semibold text-gray-800 dark:text-gray-200 mb-2 border-b border-gray-100 dark:border-gray-700 pb-2">สถานะของ SKU Status</h5>
                                         <ul class="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                                            <li><span class="font-medium text-central-red">A:</span> Active</li>
-                                            <li><span class="font-medium text-central-red">I:</span> Inactive</li>
-                                            <li><span class="font-medium text-central-red">P:</span> To be Purged</li>
+                                            <li><span class="font-medium text-central-red">A:</span> Active (ยังมีสินค้าหมุนเวียนอยู่)</li>
+                                            <li><span class="font-medium text-central-red">I:</span> Inactive (ไม่มีสินค้าหมุนเวียน)</li>
+                                            <li><span class="font-medium text-central-red">P:</span> To be Purged (สินค้าเลิกผลิตแล้ว)</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -2849,45 +2977,42 @@
                                 <h3 class="text-xl font-bold text-gray-800 dark:text-gray-100">ใบปรับราคา-กรณีมาทาง Mail</h3>
                             </div>
                             
-                            <h4 class="font-bold text-lg text-gray-800 dark:text-gray-100 mb-3 text-center md:text-left">EVENT NOTIFICATION FORM</h4>
+                            <h4 class="font-bold text-lg text-gray-800 dark:text-gray-100 mb-3 text-center md:text-left">EVENT NOTIFICATION FORM (ใบปรับราคา)</h4>
 
                             <!-- Table Image Placeholder (Replaced HTML Table) -->
                             <div class="mb-6 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700 p-4 shadow-sm">
                                 <div class="text-center">
                                     <img src="901 event notfication form.jpg" class="w-full h-auto rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 object-cover" alt="รูปภาพตาราง EVENT NOTIFICATION FORM">
                                 </div>
-                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-3 text-center">
-                                    <i class="ph-fill ph-info text-central-red inline-block mr-1"></i> พื้นที่สำหรับใส่รูปภาพตาราง EVENT NOTIFICATION FORM
-                                </p>
                             </div>
 
-                            <!-- Explanation Grid -->
+                                <!-- Explanation Grid -->
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div class="bg-white dark:bg-gray-800 p-5 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm flex items-start gap-4">
                                     <div class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center font-bold text-gray-800 dark:text-gray-200 flex-shrink-0">1</div>
                                     <div>
-                                        <span class="font-bold text-central-red block mb-1">ช่องที่ 1 (K)</span>
+                                        <span class="font-bold text-central-red block mb-1">ช่องลงชื่อพนักงานขาย (เริ่ม)</span>
                                         <p class="text-sm text-gray-700 dark:text-gray-300">พนักงานขายประจำแบรนด์/แผนกลงชื่อและวันที่ เมื่อเปลี่ยนป้ายราคาเสร็จสิ้นตามเอกสาร Ad Event Listing</p>
-                                    </div>
-                                </div>
-                                <div class="bg-white dark:bg-gray-800 p-5 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm flex items-start gap-4">
-                                    <div class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center font-bold text-gray-800 dark:text-gray-200 flex-shrink-0">3</div>
-                                    <div>
-                                        <span class="font-bold text-central-red block mb-1">ช่องที่ 3 (M)</span>
-                                        <p class="text-sm text-gray-700 dark:text-gray-300">DSM ลงชื่อและวันที่ เมื่อตรวจสอบการเปลี่ยนป้ายราคาตามเอกสาร Ad Event Listing ก่อนเริ่มจัดรายการ</p>
                                     </div>
                                 </div>
                                 <div class="bg-white dark:bg-gray-800 p-5 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm flex items-start gap-4">
                                     <div class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center font-bold text-gray-800 dark:text-gray-200 flex-shrink-0">2</div>
                                     <div>
-                                        <span class="font-bold text-central-red block mb-1">ช่องที่ 2 (L)</span>
+                                        <span class="font-bold text-central-red block mb-1">ช่องลงชื่อพนักงานขาย (สิ้นสุด)</span>
                                         <p class="text-sm text-gray-700 dark:text-gray-300">พนักงานลงชื่อหลังเปลี่ยนป้ายราคากลับเสร็จสิ้นหลังจบรายการ <span class="text-red-500 font-medium">(หากปรับราคาถาวรให้พนักงานขีด “-”)</span></p>
+                                    </div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-5 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm flex items-start gap-4">
+                                    <div class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center font-bold text-gray-800 dark:text-gray-200 flex-shrink-0">3</div>
+                                    <div>
+                                        <span class="font-bold text-central-red block mb-1">ช่องผู้ตรวจสอบ (เริ่ม)</span>
+                                        <p class="text-sm text-gray-700 dark:text-gray-300">DSM ลงชื่อและวันที่ เมื่อตรวจสอบการเปลี่ยนป้ายราคาตามเอกสาร Ad Event Listing ก่อนเริ่มจัดรายการ </p>
                                     </div>
                                 </div>
                                 <div class="bg-white dark:bg-gray-800 p-5 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm flex items-start gap-4">
                                     <div class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center font-bold text-gray-800 dark:text-gray-200 flex-shrink-0">4</div>
                                     <div>
-                                        <span class="font-bold text-central-red block mb-1">ช่องที่ 4 (N)</span>
+                                        <span class="font-bold text-central-red block mb-1">ช่องผู้ตรวจสอบ (สิ้นสุด)</span>
                                         <p class="text-sm text-gray-700 dark:text-gray-300">DSM ลงชื่อและวันที่ เมื่อตรวจสอบการเปลี่ยนป้ายราคากลับหลังจบโปรโมชั่น</p>
                                     </div>
                                 </div>
@@ -2896,7 +3021,7 @@
                             <!-- Mockup Image -->
                             <div class="mt-8 bg-gray-50 dark:bg-gray-800/50 p-4 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm text-center">
                                 <h4 class="font-bold text-gray-800 dark:text-gray-100 mb-4">ตัวอย่างเอกสาร Ad Event Listing</h4>
-                                <img src="902 ad event listing.png" class="w-full h-auto rounded-lg object-cover shadow-sm border border-gray-200 dark:border-gray-700" alt="ตัวอย่างเอกสาร Ad Event Listing">
+                                <img src="902 ad event listing.jpg" class="w-full h-auto rounded-lg object-cover shadow-sm border border-gray-200 dark:border-gray-700" alt="ตัวอย่างเอกสาร Ad Event Listing">
                             </div>
                         </section>
 
@@ -2930,7 +3055,7 @@
                         <section class="space-y-6 w-full">
                             <div class="bg-gray-50 dark:bg-gray-800/50 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-sm w-full">
                                 <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4 text-lg">
-                                    <strong class="text-central-red font-bold">สินค้า No Sale (Non Move)</strong> คือสินค้าที่มีสต็อก แต่ไม่เกิดการขายสินค้ามาแล้วไม่น้อยกว่า 180 วันนับจากการขายสินค้าครั้งล่าสุด
+                                    <strong class="text-central-red font-bold">สินค้า No Sale (Non Move)</strong> คือสินค้าที่มีสต็อก แต่ไม่เกิดการขายสินค้ามาแล้วไม่น้อยกว่า 180 วัน<br>นับจากการขายสินค้าครั้งล่าสุด
                                 </p>
                                 
                                 <div class="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-xl border border-yellow-200 dark:border-yellow-800/30 mb-6 text-sm text-gray-700 dark:text-gray-300 w-full">
@@ -3065,14 +3190,18 @@
                                     <ol class="space-y-3 text-sm text-gray-600 dark:text-gray-400 list-decimal pl-5">
                                         <li>นำชื่อสินค้า, บาร์โค้ด, แบรนด์ และจำนวนสินค้าจาก Report No Sale มากรอกลงใน RTV Form</li>
                                         <li>นำ RTV Form ไปให้ผู้จัดการแผนกทำการเซ็นอนุมัติ</li>
-                                        <li>ค้นหารายการสินค้าที่ระบุบน RTV Form โดยค้นหาจากรหัสบาร์โค้ด</li>
-                                        <li>จัดเตรียมสินค้าให้ครบถ้วนตาม RTV Form และเตรียมกล่องสำหรับบรรจุสินค้า</li>
-                                        <li>นำสินค้าไปยังแผนก GR เพื่อแพ็คสินค้า และชั่งน้ำหนัก</li>
-                                        <li>จัดเตรียมใบแปะหน้า โดยกรอกข้อมูลให้ถูกต้อง และนำ RTV Form และใบแปะหน้าให้พนักงาน GR และตรวจสอบสินค้าร่วมกับแผนก GR</li>
-                                        <li>จัดทำเอกสารใบนำส่งให้ครบถ้วนและนำไปติดข้างกล่องบรรจุสินค้า</li>
-                                        <li>ปิดผนึกกล่องสินค้าให้เรียบร้อย</li>
+                                        
                                     </ol>
                                 </div>
+                                <br>
+                                 <ol class="space-y-4 text-sm text-gray-700 dark:text-gray-300 list-decimal p1-5">
+                                    <li><span class="font-medium text-gray-800 dark:text-gray-200">ค้นหารายการสินค้า</span>ที่ระบุบน RTV Form โดยค้นหาจากรหัสบาร์โค้ด</li>
+                                    <li><span class="font-medium text-gray-800 dark:text-gray-200">จัดเตรียมสินค้าให้ครบถ้วนตาม RTV Form และเตรียมกล่องสำหรับบรรจุสินค้า</li>
+                                    <li><span class="font-medium text-gray-800 dark:text-gray-200">นำสินค้าไปยังแผนก GR เพื่อแพ็คสินค้า และชั่งน้ำหนัก</li>
+                                    <li><span class="font-medium text-gray-800 dark:text-gray-200">จัดเตรียมใบแปะหน้า โดยกรอกข้อมูลให้ถูกต้อง และนำ RTV Form และใบแปะหน้าให้พนักงาน GR และตรวจสอบสินค้าร่วมกับแผนก GR</li>
+                                    <li><span class="font-medium text-gray-800 dark:text-gray-200">จัดทำเอกสารใบนำส่งให้ครบถ้วนและนำไปติดข้างกล่องบรรจุสินค้า</li>
+                                    <li><span class="font-medium text-gray-800 dark:text-gray-200">ปิดผนึกกล่องสินค้าให้เรียบร้อย</li>
+                                </ol>
                             </div>
 
                             <!-- ตัวอย่าง RTV Form & ใบแปะหน้า -->
@@ -3087,6 +3216,18 @@
                                     <h4 class="font-bold text-gray-800 dark:text-gray-100 mb-4">ตัวอย่างใบแปะหน้า RTV</h4>
                                     <div class="flex-1 flex items-center justify-center">
                                         <img src="1006 ใบแปะหน้า RTV.jpg" class="w-full max-w-lg h-auto rounded-lg object-cover shadow-sm border border-gray-200 dark:border-gray-700" alt="ตัวอย่างใบแปะหน้า RTV">
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- คลิปวิดีโอ (YouTube): ต่อจากตัวอย่างใบแปะหน้า RTV -->
+                            <div class="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm w-full">
+                                <h4 class="font-bold text-gray-800 dark:text-gray-100 mb-4 flex items-center gap-2"><i class="ph-fill ph-youtube-logo text-central-red text-xl"></i> คลิปวิดีโอแนะนำ</h4>
+                                <!-- ▶ วิธีใส่คลิป: วางลิงก์ YouTube ระหว่างเครื่องหมายคำพูดของ data-youtube-url (ตัวอย่าง https://www.youtube.com/watch?v=XXXXXXXXXXX หรือ https://youtu.be/XXXXXXXXXXX) -->
+                                <div class="video-slot" data-youtube-url="https://youtu.be/bkzKIlP0f6g" data-youtube-title="คลิปวิดีโอแนะนำ RTV">
+                                    <div class="video-empty">
+                                        <i class="ph-fill ph-youtube-logo"></i>
+                                        <span class="font-medium">พื้นที่สำหรับคลิปวิดีโอ</span>
+                                        <span class="text-sm">ยังไม่มีคลิปวิดีโอในหัวข้อนี้</span>
                                     </div>
                                 </div>
                             </div>
@@ -3398,7 +3539,7 @@
                                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-700 dark:text-gray-300">
                                         <div class="flex items-start gap-2">
                                             <span class="w-6 h-6 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center font-bold text-gray-800 dark:text-gray-200 flex-shrink-0 mt-0.5">1</span>
-                                            <p>เข้ามาที่หน้ารายละเอียดของสินค้าที่สนใจและดูที่ Available Stock จะเห็นจำนวนสต็อคของสาขาปัจจุบัน</p>
+                                            <p>เข้ามาที่หน้ารายละเอียดของสินค้าที่สนใจและดูที่ Available Stock จะเห็นจำนวนสต็อกของสาขาปัจจุบัน</p>
                                         </div>
                                         <div class="flex items-start gap-2">
                                             <span class="w-6 h-6 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center font-bold text-gray-800 dark:text-gray-200 flex-shrink-0 mt-0.5">2</span>
@@ -3674,6 +3815,7 @@
         };
 
         function showTab(tabId, forceOpen = false) {
+            if (window.SubTabs && SubTabs.onMenuClick(tabId, forceOpen)) return; // สลับ Dropdown ใน Sidebar
             const targetButton = document.querySelector(`button[data-tab="${tabId}"]`);
             const isCurrentlyActive = targetButton && targetButton.classList.contains('active-tab');
 
@@ -3809,6 +3951,296 @@
                 }
             }
         });
+    </script>
+
+    <script>
+    /* ===== Fast Track: Dropdown ใน Sidebar =====
+       สร้างรายการหัวข้อย่อยจาก <section> ของแต่ละเมนู แล้วเลื่อนหน้าไปยังหัวข้อนั้น
+       ไม่แบ่ง ไม่ซ่อน ไม่ย้าย และไม่แก้ไขเนื้อหาในหน้าเว็บ */
+    const SubTabs = (function () {
+        // ชื่อรายการ: null = ใช้ข้อความหัวข้อ (h3) ของ section นั้น ๆ
+        // ระบุเฉพาะ section ที่ไม่มีหัวข้อ (ส่วนบทนำ) หรือหัวข้อยาวเกินไป
+        const LABELS = {
+            'tab-personality': ['การแต่งกาย ยูนิฟอร์ม', 'ทรงผม', 'ใบหน้า', 'การตกแต่งร่างกาย', 'การรักษากลิ่นต่าง ๆ'],
+            'tab-stock': ['ความหมายและประเภท', 'วิธีการตรวจนับ', 'การเตรียมการ', 'วันนับสต็อก', 'Cyclic Count', 'ปัญหาและการแก้ไข'],
+            'tab-workorder': ['ความหมายของใบแจ้งงาน', null, null, null],
+            'tab-transfer': ['บทนำและกฎการโอน', null, null, null, null, null, null],
+            'tab-No Sales': ['ความหมายและประเภทสินค้า', null, 'ข้อเสีย ผลดี และการป้องกัน', null],
+            'tab-slick': ['ความรู้เบื้องต้นและกฎการใช้งาน', null, null, null, null],
+            'tab-oneconnect': ['ภาพรวม ONE CONNECT', 'จุดประสงค์การใช้งาน', null]
+        };
+        const registry = {};   // tabId -> { drop, btn, caret, items, sections }
+
+        const el = (tag, cls, attrs) => {
+            const n = document.createElement(tag);
+            if (cls) n.className = cls;
+            if (attrs) Object.keys(attrs).forEach(k => n.setAttribute(k, attrs[k]));
+            return n;
+        };
+        const topSections = tab => Array.from(tab.querySelectorAll('section'))
+            .filter(s => !s.parentElement.closest('section') && s.closest('.tab-content') === tab);
+        const menuButton = tabId => document.querySelector('button[data-tab="' + tabId + '"]');
+
+        function iconFor(sec) {
+            const i = el('i', 'ph-fill ph-bookmark-simple');
+            const first = sec.firstElementChild;
+            const src = first && first.firstElementChild && first.firstElementChild.tagName === 'I' ? first.firstElementChild : null;
+            if (src) i.className = Array.from(src.classList).filter(c => c.startsWith('ph')).join(' ');
+            i.setAttribute('aria-hidden', 'true');
+            return i;
+        }
+
+        function scrollToEl(target) {
+            const hdr = document.querySelector('header').offsetHeight;
+            const top = target.getBoundingClientRect().top + window.scrollY - hdr - 20;
+            window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+        }
+
+        function build(tab) {
+            const secs = topSections(tab);
+            const btn = menuButton(tab.id);
+            if (secs.length < 2 || !btn) return;
+            const labels = LABELS[tab.id] || [];
+            const st = { sections: secs, items: [], btn, tab };
+
+            const drop = el('div', 'menu-drop');
+            const inner = el('div', 'menu-drop-inner');
+            const list = el('div', 'menu-drop-list', { role: 'group', 'aria-label': 'ไปยังหัวข้อ' });
+            secs.forEach((sec, idx) => {
+                const h3 = sec.querySelector('h3');
+                const title = labels[idx] || (h3 ? h3.textContent.trim().replace(/\s+/g, ' ') : 'หัวข้อ ' + (idx + 1));
+                const it = el('button', 'menu-sub', { type: 'button', title: title });
+                it.appendChild(iconFor(sec));
+                const sp = el('span'); sp.textContent = title; it.appendChild(sp);
+                it.addEventListener('click', () => { mark(st, idx); scrollToEl(sec); });
+                list.appendChild(it); st.items.push(it);
+            });
+            inner.appendChild(list); drop.appendChild(inner);
+            btn.parentNode.insertBefore(drop, btn.nextSibling);
+            st.drop = drop;
+            st.caret = btn.querySelector('.arrow-color');
+            if (st.caret) st.caret.classList.add('transition-transform', 'duration-300');
+            registry[tab.id] = st;
+        }
+
+        function mark(st, idx) {
+            st.items.forEach((it, i) => { if (i === idx) it.setAttribute('aria-current', 'true'); else it.removeAttribute('aria-current'); });
+        }
+
+        // ไฮไลต์หัวข้อที่กำลังอ่านอยู่ตามการเลื่อนหน้า
+        let ticking = false;
+        function spy() {
+            ticking = false;
+            const hdr = document.querySelector('header').offsetHeight;
+            Object.keys(registry).forEach(id => {
+                const st = registry[id];
+                if (st.tab.classList.contains('hidden')) return;
+                let cur = -1;
+                st.sections.forEach((s, i) => { if (s.getBoundingClientRect().top <= hdr + 80) cur = i; });
+                if (cur < 0) st.items.forEach(it => it.removeAttribute('aria-current')); else mark(st, cur);
+            });
+        }
+        window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(spy); } }, { passive: true });
+
+        // ใช้โดย showTab(): เปิด Dropdown ของเมนูที่เลือก ปิดของเมนูอื่น
+        // คืนค่า true เมื่อกดเมนูที่ active อยู่แล้ว (ให้สลับเปิด/ปิด Dropdown แทนการโหลดซ้ำ)
+        function onMenuClick(tabId, forceOpen) {
+            const st = registry[tabId];
+            const btn = menuButton(tabId);
+            const wasActive = btn && btn.classList.contains('active-tab');
+            if (st && wasActive && !forceOpen) {
+                const open = !st.drop.classList.contains('is-open');
+                st.drop.classList.toggle('is-open', open);
+                if (st.caret) st.caret.classList.toggle('rotate-90', open);
+                return true;
+            }
+            Object.keys(registry).forEach(id => {
+                const s = registry[id], on = id === tabId;
+                s.drop.classList.toggle('is-open', on);
+                if (s.caret) s.caret.classList.toggle('rotate-90', on);
+            });
+            requestAnimationFrame(spy);
+            return false;
+        }
+
+        function syncHeaderHeight() {
+            const h = document.querySelector('header');
+            if (h) document.documentElement.style.setProperty('--hdr-h', h.offsetHeight + 'px');
+        }
+
+        function init() {
+            syncHeaderHeight();
+            window.addEventListener('resize', syncHeaderHeight);
+            // ถอดเมนูย่อยแบบเดิมของ Sidebar ออก (ถูกแทนที่ด้วย Dropdown ใหม่ที่ครบทุกเมนู)
+            ['submenu-personality', 'submenu-stock'].forEach(id => { const n = document.getElementById(id); if (n) n.remove(); });
+            document.querySelectorAll('.tab-content').forEach(build);
+        }
+        return { init, onMenuClick };
+    })();
+    SubTabs.init();
+    window.SubTabs = SubTabs;
+    </script>
+
+    <script>
+    /* ===== Image Lightbox: กดรูปเพื่อดูภาพเต็มโดยไม่ต้องซูมหน้าเว็บ =====
+       ทำงานแบบ overlay แยกจากหน้าเว็บ ไม่แก้ไขรูปหรือเนื้อหาเดิม */
+    (function () {
+        const overlay = document.createElement('div');
+        overlay.className = 'lb-overlay';
+        overlay.setAttribute('role', 'dialog');
+        overlay.setAttribute('aria-modal', 'true');
+        overlay.setAttribute('aria-label', 'ดูรูปภาพขยาย');
+        overlay.innerHTML =
+            '<div class="lb-top">' +
+              '<span class="lb-caption"></span><span class="lb-count"></span>' +
+              '<button type="button" class="lb-btn lb-close" aria-label="ปิด"><i class="ph-bold ph-x"></i></button>' +
+            '</div>' +
+            '<div class="lb-stage">' +
+              '<button type="button" class="lb-btn lb-nav lb-prev" aria-label="รูปก่อนหน้า"><i class="ph-bold ph-caret-left"></i></button>' +
+              '<img alt="">' +
+              '<button type="button" class="lb-btn lb-nav lb-next" aria-label="รูปถัดไป"><i class="ph-bold ph-caret-right"></i></button>' +
+            '</div>';
+        document.body.appendChild(overlay);
+
+        const stage = overlay.querySelector('.lb-stage');
+        const big = stage.querySelector('img');
+        const cap = overlay.querySelector('.lb-caption');
+        const count = overlay.querySelector('.lb-count');
+        const prevBtn = overlay.querySelector('.lb-prev');
+        const nextBtn = overlay.querySelector('.lb-next');
+        const closeBtn = overlay.querySelector('.lb-close');
+
+        let group = [], idx = 0, zoomed = false, lastFocus = null;
+
+        function fit() {
+            // ย่อ/ขยายให้พอดีหน้าจอ (ขยายรูปเล็กได้สูงสุด 3 เท่า) แล้วคูณ 2 เมื่อซูม
+            const nw = big.naturalWidth || 800, nh = big.naturalHeight || 450;
+            const cs = getComputedStyle(stage);
+            const aw = stage.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+            const ah = stage.clientHeight - 16;
+            let scale = Math.min(aw / nw, ah / nh, 3);
+            if (zoomed) scale *= 2;
+            big.style.width = Math.round(nw * scale) + 'px';
+            big.style.height = Math.round(nh * scale) + 'px';
+            stage.classList.toggle('is-zoomed', zoomed);
+        }
+
+        function show(i) {
+            idx = (i + group.length) % group.length;
+            const src = group[idx];
+            zoomed = false;
+            big.onload = fit;
+            big.src = src.currentSrc || src.src;
+            big.alt = src.alt || '';
+            cap.textContent = src.alt || '';
+            count.textContent = group.length > 1 ? (idx + 1) + ' / ' + group.length : '';
+            prevBtn.hidden = nextBtn.hidden = group.length < 2;
+            stage.scrollTo(0, 0);
+            if (big.complete) fit();
+        }
+
+        function open(img) {
+            const tab = img.closest('.tab-content');
+            group = Array.from((tab || document).querySelectorAll('img'));
+            lastFocus = document.activeElement;
+            overlay.classList.add('is-open');
+            requestAnimationFrame(() => overlay.classList.add('is-visible'));
+            document.body.style.overflow = 'hidden';
+            show(group.indexOf(img));
+            closeBtn.focus();
+        }
+
+        function close() {
+            overlay.classList.remove('is-visible');
+            setTimeout(() => overlay.classList.remove('is-open'), 200);
+            document.body.style.overflow = '';
+            if (lastFocus && lastFocus.focus) lastFocus.focus();
+        }
+
+        document.addEventListener('click', e => {
+            const img = e.target.closest && e.target.closest('.tab-content img');
+            if (img) { e.preventDefault(); open(img); }
+        });
+        closeBtn.addEventListener('click', close);
+        prevBtn.addEventListener('click', () => show(idx - 1));
+        nextBtn.addEventListener('click', () => show(idx + 1));
+        big.addEventListener('click', e => { e.stopPropagation(); zoomed = !zoomed; fit(); });
+        // คลิกพื้นหลังมืด = ปิด
+        stage.addEventListener('click', e => { if (e.target === stage) close(); });
+        overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
+
+        document.addEventListener('keydown', e => {
+            if (!overlay.classList.contains('is-open')) return;
+            if (e.key === 'Escape') close();
+            else if (e.key === 'ArrowLeft' && group.length > 1) show(idx - 1);
+            else if (e.key === 'ArrowRight' && group.length > 1) show(idx + 1);
+            else if (e.key === 'Tab') {   // ล็อกโฟกัสไว้ใน lightbox
+                const f = Array.from(overlay.querySelectorAll('button:not([hidden])'));
+                const first = f[0], last = f[f.length - 1];
+                if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+                else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+            }
+        });
+        window.addEventListener('resize', () => { if (overlay.classList.contains('is-open')) fit(); });
+
+        // ปัดซ้าย/ขวาบนมือถือเพื่อเปลี่ยนรูป (เมื่อไม่ได้ซูม)
+        let tx = null;
+        stage.addEventListener('touchstart', e => { tx = e.touches.length === 1 && !zoomed ? e.touches[0].clientX : null; }, { passive: true });
+        stage.addEventListener('touchend', e => {
+            if (tx === null || group.length < 2) return;
+            const dx = e.changedTouches[0].clientX - tx;
+            if (Math.abs(dx) > 60) show(idx + (dx < 0 ? 1 : -1));
+            tx = null;
+        });
+    })();
+    </script>
+
+    <script>
+    /* ===== YouTube Video Slot: แปลงลิงก์ YouTube เป็นวิดีโอฝังในหน้า =====
+       ใส่ลิงก์ที่ data-youtube-url ของ .video-slot ถ้าเว้นว่างจะแสดงกล่อง "พื้นที่สำหรับคลิปวิดีโอ" */
+    (function () {
+        function parse(url) {
+            url = (url || '').trim();
+            if (!url) return null;
+            let u;
+            try { u = new URL(url.indexOf('//') === -1 ? 'https://' + url : url); } catch (e) { return null; }
+            const host = u.hostname.replace(/^www\.|^m\./, '');
+            let id = null;
+            if (host === 'youtu.be') id = u.pathname.slice(1).split('/')[0];
+            else if (host === 'youtube.com' || host === 'youtube-nocookie.com') {
+                if (u.pathname === '/watch') id = u.searchParams.get('v');
+                else {
+                    const m = u.pathname.match(/^\/(embed|shorts|live|v)\/([^/?]+)/);
+                    if (m) id = m[2];
+                }
+            }
+            if (!id || !/^[A-Za-z0-9_-]{6,15}$/.test(id)) return null;
+            // เวลาเริ่ม: t=90 หรือ t=1m30s หรือ start=90
+            let start = 0;
+            const t = u.searchParams.get('t') || u.searchParams.get('start');
+            if (t) {
+                const m = t.match(/^(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s?)?$/);
+                if (m) start = (+m[1] || 0) * 3600 + (+m[2] || 0) * 60 + (+m[3] || 0);
+            }
+            return { id: id, start: start };
+        }
+        document.querySelectorAll('.video-slot').forEach(function (slot) {
+            const v = parse(slot.getAttribute('data-youtube-url'));
+            if (!v) return; // ไม่มีลิงก์/ลิงก์ไม่ถูกต้อง: คงกล่อง placeholder ไว้
+            const frame = document.createElement('div');
+            frame.className = 'video-frame';
+            const ifr = document.createElement('iframe');
+            ifr.src = 'https://www.youtube-nocookie.com/embed/' + v.id + '?rel=0' + (v.start ? '&start=' + v.start : '');
+            ifr.title = slot.getAttribute('data-youtube-title') || 'YouTube video';
+            ifr.loading = 'lazy';
+            ifr.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+            ifr.referrerPolicy = 'strict-origin-when-cross-origin';
+            ifr.setAttribute('allowfullscreen', '');
+            frame.appendChild(ifr);
+            slot.textContent = '';
+            slot.appendChild(frame);
+        });
+    })();
     </script>
 </body>
 </html>
